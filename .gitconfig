@@ -1,0 +1,37 @@
+[include]
+    path = ~/.gitconfig.local
+[http]
+    postBuffer = 1572864000
+[credential]
+    helper = cache --timeout=3600
+# define command which will be used when "nvim" is set as a merge tool
+[mergetool "nvim"]
+    cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+# set "nvim" as tool for merging
+[merge]
+    tool = nvim
+    # automatically launch merge tool without displaying a prompt
+[mergetool]
+    prompt = false
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = true
+    pager = true
+[init]
+    defaultBranch = main
+[alias]
+    aliases = config --get-regexp alias
+    branches = branch --all
+    ci  = commit -v
+    cia = commit -v --amend
+    co  = checkout
+    # Diff current HEAD to common ancestor of current HEAD and main
+    dam = "!f() { git diff $(git merge-base main HEAD)..HEAD; }; f"
+    l  = log --pretty=oneline -n 20 --graph --abbrev-commit
+    ld = log --follow -p --stat --
+    lg = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(red)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    # Interactive rebase with the given number of latest commits.
+    reb = "!r() { git rebase -i HEAD~$1; }; r"
