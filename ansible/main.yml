@@ -1,0 +1,34 @@
+- name: Setup dotfiles repo
+  hosts: local
+  gather_facts: true
+  become: false
+
+  vars:
+    dotfiles_add_symlinks:
+      - { src: ~/dotfiles/.gitconfig, path: ~/.gitconfig }
+      - { src: ~/dotfiles/.p10k.zsh, path: ~/.p10k.zsh }
+      - { src: ~/dotfiles/.tmux.conf, path: ~/.tmux.conf }
+      - { src: ~/dotfiles/.vimrc, path: ~/.vimrc }
+      - { src: ~/dotfiles/.zshrc, path: ~/.zshrc }
+      - { src: ~/dotfiles/nvim, path: ~/.config/nvim }
+
+  tasks:
+    - name: "Symlink dotfiles"
+      ansible.builtin.import_tasks: tasks/dotfiles.yml
+      tags: ['dotfiles']
+
+    - name: "Install and configure ZSH"
+      ansible.builtin.include_tasks: tasks/zsh.yml
+      tags: ['zsh']
+
+    - name: "Install and configure Neovim"
+      ansible.builtin.include_tasks: tasks/nvim.yml
+      tags: ['nvim']
+
+    - name: "Install and configure Tmux"
+      ansible.builtin.include_tasks: tasks/tmux.yml
+      tags: ['tmux']
+
+    - name: "Install and configure NVM"
+      ansible.builtin.include_tasks: tasks/nvm.yml
+      tags: ['nvm']

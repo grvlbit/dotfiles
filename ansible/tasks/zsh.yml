@@ -1,0 +1,53 @@
+---
+- name: Ensure .cache directory exists
+  ansible.builtin.file:
+    path: "~/.cache"
+    state: directory
+    mode: '0700'
+
+- name: Download oh-my-zsh installer
+  ansible.builtin.get_url:
+    url: https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+    dest: "~/.cache/oh-my-zsh-install.sh"
+    mode: '0750'
+
+- name: Install oh-my-zsh
+  ansible.builtin.command: "bash ./.cache/oh-my-zsh-install.sh"
+  args:
+    chdir: "~/"
+    creates: ".oh-my-zsh/README.md"
+
+- name: Add syntax highlighting plugin
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    version: master
+
+- name: Add auto suggestions plugin
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    version: master
+
+# Install powerlevel10k
+- name: Get ZSH version
+  ansible.builtin.shell: "set -o pipefail; zsh --version | cut -d ' ' -f2 | cut -c1-3"
+  args:
+    executable: /bin/bash
+  check_mode: false
+  changed_when: false
+  register: zsh_version
+
+- name: Powerlevel10k works only with ZSH >= 5.1
+  ansible.builtin.debug:
+    msg: "You are using ZSH version {{ zsh_version.stdout }}. The minimum required version for Powerlevel10k is 5.1"
+  when: zsh_version.stdout|float < 5.1
+
+- name: Install powerlevel10k.
+  ansible.builtin.git:
+    repo: "https://github.com/romkatv/powerlevel10k.git"
+    dest: "~/.oh-my-zsh/custom}/themes/powerlevel10k"
+    depth: '1'
+    update: false
+    version: 'v1.19.0'
+  when: zsh_version.stdout|float >= 5.1

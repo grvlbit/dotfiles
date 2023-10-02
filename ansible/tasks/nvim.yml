@@ -1,0 +1,52 @@
+---
+
+- name: Install github3.py python package
+  ansible.builtin.pip:
+    name: github3.py
+    executable: pip3
+    extra_args: --user
+
+- name: Ensure ~/tools/ directory exists
+  ansible.builtin.file:
+    path: ~/tools
+    state: directory
+    mode: '0755'
+
+- name: Ensure ~/tools/nvim directory exists
+  ansible.builtin.file:
+    path: ~/tools/nvim
+    state: directory
+    mode: '0755'
+
+- name: Get nvim latest tag
+  community.general.github_release:
+    user: neovim
+    repo: neovim
+    action: latest_release
+  register: nvim_latest
+
+- name: Grab nvim latest binaries (Linux)
+  ansible.builtin.unarchive:
+    src: "https://github.com/neovim/neovim/releases/download/{{ nvim_latest['tag'] }}/nvim-linux64.tar.gz"
+    dest: ~/tools/nvim
+    remote_src: true
+    extra_opts: [--strip-components=1]
+  when: ansible_os_family != "Darwin"
+
+- name: Grab nvim latest binaries (MacOS)
+  ansible.builtin.unarchive: 
+    src: "https://github.com/neovim/neovim/releases/download/{{ nvim_latest['tag'] }}/nvim-macos.tar.gz"
+    dest: ~/tools/nvim
+    remote_src: true
+    extra_opts: [--strip-components=1]
+  when: ansible_os_family == "Darwin"
+
+- name: Ensure ~/tools/nvim/bin is on PATH
+  ansible.builtin.lineinfile:
+    path: ~/.zshrc
+    line: 'export PATH="$HOME/tools/nvim/bin:$PATH"'
+
+- name: Ensure ~/tools/nvim/bin is on PATH
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    line: 'export PATH="$HOME/tools/nvim/bin:$PATH"'
