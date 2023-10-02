@@ -1,5 +1,7 @@
 [include]
     path = ~/.gitconfig.local
+[core]
+    editor = nvim
 [http]
     postBuffer = 1572864000
 [credential]
