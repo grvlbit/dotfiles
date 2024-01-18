@@ -230,4 +230,6 @@ mmolecule() {
     fi
 }
 
-export PATH="$HOME/tools/nvim/bin:$HOME/go/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="$HOME/tools/nvim/bin:$PATH"
