@@ -116,6 +116,10 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'nvim-telescope/telescope-ui-select.nvim'
+  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
@@ -142,6 +146,48 @@ require('lazy').setup({
 
   { -- Terminal inside nvim
       'akinsho/toggleterm.nvim',
+  },
+
+  -- Setup David-Kunz/gen.nvim
+  -- see https://github.com/David-Kunz/gen.nvim
+  {
+    "David-Kunz/gen.nvim",
+    enabled = true,
+    keys = {
+      { "<leader>ap", ":Gen<CR>", mode = { "n", "v" }, desc = "Select Gen command" },
+    },
+    config = function()
+      local gen = require("gen")
+      gen.setup({
+        model = "mistral",
+        -- The display mode can be "float" or "split"
+        display_mode = "split",
+        show_prompt = false,
+      })
+      gen.prompts["Ask the DevOps Engineer"] = {
+        prompt = "You are a senior devops engineer, acting as an assistant. You offer help with cloud technologies like: Terraform, Packer, Azure, Ansible, Bash, Python, HCL. You answer with code examples when possible. $input:\n$text",
+        replace = true,
+      }
+      gen.prompts["Make_Style"] = {
+        prompt = "Transform the following text into the styole of $input:\n$text",
+        replace = true,
+      }
+    end,
+  },
+
+  -- Setup ChatGPT.vim plugin
+  -- see https://github.com/jackMort/ChatGPT.nvim
+  {
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
   },
 
   { -- Github Copilot
@@ -222,6 +268,10 @@ vim.opt.relativenumber = true            -- Enable relative line numbers
 vim.opt.ignorecase=true
 vim.opt.smartcase=true
 vim.opt.showmatch=true
+
+-- Spell checking
+vim.opt.spelllang = { "en", "de" }
+vim.opt.spell = true
 
 -- Local Python
 local conda_home = os.getenv("CONDA_HOME")
@@ -333,6 +383,8 @@ require('telescope').setup {
     },
   },
 }
+
+require("telescope").load_extension("ui-select")
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
