@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+ansible = "*"
+ansible-lint = "*"
+'github3.py' = "*"
+yamllint = "*"
+argcomplete = "*"
+pre-commit = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"

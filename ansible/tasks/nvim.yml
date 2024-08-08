@@ -1,11 +1,5 @@
 ---
 
-- name: Install github3.py python package
-  ansible.builtin.pip:
-    name: github3.py
-    executable: pip3
-    extra_args: --user
-
 - name: Ensure ~/tools/ directory exists
   ansible.builtin.file:
     path: ~/tools
@@ -34,8 +28,8 @@
   when: ansible_os_family != "Darwin"
 
 - name: Grab nvim latest binaries (MacOS)
-  ansible.builtin.unarchive: 
-    src: "https://github.com/neovim/neovim/releases/download/{{ nvim_latest['tag'] }}/nvim-macos.tar.gz"
+  ansible.builtin.unarchive:
+    src: "https://github.com/neovim/neovim/releases/download/{{ nvim_latest['tag'] }}/nvim-macos-arm64.tar.gz"
     dest: ~/tools/nvim
     remote_src: true
     extra_opts: [--strip-components=1]
