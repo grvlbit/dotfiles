@@ -75,8 +75,6 @@ vim.filetype.add({
 	}
 })
 
--- INFO: This is the default nvim colorscheme
--- vim.cmd.colorscheme 'habamax'
 
 -- [[ Basic Keymaps ]]
 

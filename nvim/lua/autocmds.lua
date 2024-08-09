@@ -26,3 +26,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = { "markdown" },
   command = "set wrap",
 })
+
+-- INFO: This is the default nvim colorscheme
+vim.cmd.colorscheme 'habamax'

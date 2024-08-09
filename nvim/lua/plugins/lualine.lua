@@ -4,7 +4,8 @@ return {
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'gruvbox', -- onedark
+        --theme = 'gruvbox', -- onedark
+        theme = 'auto', -- onedark
       },
     },
   },
