@@ -139,4 +139,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-eval "$(conda shell.zsh hook)"
+if command_exists conda; then
+  eval "$(conda shell.zsh hook)"
+fi
