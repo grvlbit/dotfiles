@@ -2,15 +2,7 @@ return {
   { "catppuccin/nvim", name = "catppuccin",
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'catppuccin-mocha'
+      vim.cmd.colorscheme 'catppuccin-frappe'
     end,
     }
-  --{ -- Theme gruvbox (lua port of 'morhetz/gruvbox')
-  --  'ellisonleao/gruvbox.nvim',
-  --  priority = 1000,
-  --  config = function()
-  --    vim.o.background = "dark" -- or "light" for light mode
-  --    vim.cmd.colorscheme 'gruvbox'
-  --  end,
-  --},
 }
