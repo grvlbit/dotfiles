@@ -1,3 +1,6 @@
+# Add profiling capabilities
+#zmodload zsh/zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -43,6 +46,9 @@ alias l='ls -CF'
 
 # set minikube alias
 alias kubectl="minikube kubectl --"
+
+# set less slurm-<latest>.log
+alias lesss='less $(ls -1 slurm-*.out | sort -V | tail -n 1)'
 
 function command_exists {
   #this should be a very portable way of checking if something is on the path
@@ -142,3 +148,6 @@ eval "$(pyenv init -)"
 if command_exists conda; then
   eval "$(conda shell.zsh hook)"
 fi
+
+# Stop profiling
+#zprof
