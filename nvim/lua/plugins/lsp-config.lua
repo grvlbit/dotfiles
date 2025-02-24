@@ -92,6 +92,23 @@ return {
       {'hrsh7th/cmp-nvim-lsp'},
       {'williamboman/mason-lspconfig.nvim'},
     },
+    opts = {
+      servers = {
+        -- https://github.com/microsoft/pyright/discussions/5852#discussioncomment-6874502
+        pyright = {
+          capabilities = {
+            textDocument = {
+              publishDiagnostics = {
+                tagSupport = {
+                  valueSet = { 2 },
+                },
+              },
+            },
+          },
+        },
+        ruff_lsp = {},
+      },
+    },
     config = function()
       -- This is where all the LSP shenanigans will live
       local lsp_zero = require('lsp-zero')

@@ -11,6 +11,7 @@
       - { src: ~/dotfiles/.vimrc, path: ~/.vimrc }
       - { src: ~/dotfiles/.zshrc, path: ~/.zshrc }
       - { src: ~/dotfiles/nvim, path: ~/.config/nvim }
+      - { src: ~/dotfiles/.ghostty.conf, path: ~/.config/ghostty/config }
 
   tasks:
     - name: "Symlink dotfiles"

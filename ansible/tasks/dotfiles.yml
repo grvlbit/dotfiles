@@ -8,6 +8,7 @@
     - ~/.config
     - ~/.local
     - ~/.ssh/
+    - ~/.config/ghostty
 
 - name: Setup symlinks
   ansible.builtin.file:
