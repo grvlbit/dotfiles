@@ -21,7 +21,7 @@
 
 - name: Grab nvim latest binaries (Linux)
   ansible.builtin.unarchive:
-    src: "https://github.com/neovim/neovim/releases/download/{{ nvim_latest['tag'] }}/nvim-linux64.tar.gz"
+    src: "https://github.com/neovim/neovim/releases/download/{{ nvim_latest['tag'] }}/nvim-linux-x86_64.tar.gz"
     dest: ~/tools/nvim
     remote_src: true
     extra_opts: [--strip-components=1]
