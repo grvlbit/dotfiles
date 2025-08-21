@@ -9,3 +9,10 @@
   environment:
     TMUX_PLUGIN_MANAGER_PATH: ~/.tmux/plugins/
   changed_when: false
+
+- name: Manually install catppucin theme
+  ansible.builtin.git:
+    repo: "https://github.com/catppuccin/tmux.git"
+    dest: "~/.config/tmux/plugins/catppuccin"
+    version: "latest"
+
