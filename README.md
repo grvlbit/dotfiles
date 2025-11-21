@@ -9,7 +9,7 @@ playbook:
 ```
 pip install pipenv
 pipenv install
-pipenv run ansible-playbook -i ansible/hosts ansible/main.yml`
+pipenv run ansible-playbook -i ansible/hosts ansible/main.yml
 ```
 
 This playbook configures my dotfiles and installs the essential tools for my DevOps setup.

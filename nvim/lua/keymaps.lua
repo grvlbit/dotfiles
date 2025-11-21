@@ -69,12 +69,11 @@ end
 
 -- Default custom filetypes
 vim.filetype.add({
-	extension = {
-		yml = "yaml.ansible",
-		yaml = "yaml.ansible"
-	}
+  extension = {
+    yml = "yaml.ansible",
+    yaml = "yaml.ansible"
+  }
 })
-
 
 -- [[ Basic Keymaps ]]
 
@@ -124,7 +123,13 @@ end
 vim.keymap.set('n', '<leader>j', ":edit " .. "~/journal/" .. get_journal_filename() .. "<cr>", {})
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Go to previous diagnostic message" })
+
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Go to next diagnostic message" })
+
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })

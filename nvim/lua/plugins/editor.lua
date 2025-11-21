@@ -23,7 +23,7 @@ return {
     end,
   },
 
-  { 'echasnovski/mini.bufremove',
+  { 'nvim-mini/mini.bufremove',
     version = '*',
     lazy = true,
     keys = {
@@ -34,20 +34,22 @@ return {
       require("mini.bufremove").setup({})
     end,
   },
-  { 'echasnovski/mini.pairs',
+  { 'nvim-mini/mini.pairs',
     version = '*',
     event = 'InsertEnter',
     lazy = true,
     config = function()
-      require("mini.pairs").setup({})
+      require("mini.pairs").setup({
+      })
     end,
   },
-  { 'echasnovski/mini.trailspace',
+  { 'nvim-mini/mini.trailspace',
     version = '*',
     config = function()
       require("mini.trailspace").setup{}
     end,
   },
+  { 'nvim-mini/mini.icons', version = '*' },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {}},
@@ -64,13 +66,17 @@ return {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
   },
-  { 'ggandor/leap.nvim',
-    config = function()
-      require('leap').add_default_mappings()
-    end,
+  {
+  'ggandor/leap.nvim',
+  config = function()
+    -- set keymaps inside the config function
+    vim.keymap.set({'n', 'x', 'o'}, 's',  '<Plug>(leap-forward)')
+    vim.keymap.set({'n', 'x', 'o'}, 'S',  '<Plug>(leap-backward)')
+    vim.keymap.set('n',             'gs', '<Plug>(leap-from-window)')
+  end
   },
 
-  -- Adds git releated signs to the gutter, as well as utilities for managing changes
+  -- Adds git related signs to the gutter, as well as utilities for managing changes
   { 'lewis6991/gitsigns.nvim',
     opts = {},
     config = function()
@@ -126,15 +132,11 @@ return {
     opts = {},
   },
 
-  { 'ThePrimeagen/vim-be-good',
-    cmd = 'VimBeGood',
-  },
-
   -- Git related plugins
   { 'tpope/vim-fugitive',
     dependencies = { 'tpope/vim-rhubarb' },
   },
-  { 'tpope/vim-surround', 
+  { 'tpope/vim-surround',
   },
 
   -- Detect tabstop and shiftwidth automatically
@@ -157,6 +159,17 @@ return {
     { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
     { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
   },
-}
+  },
+
+  {
+  "olimorris/codecompanion.nvim",
+  opts = {},
+  keys = {
+    { "<leader>cc", "<cmd>CodeCompanionChat<cr>", desc = "Code Companion" },
+	},
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    },
+  },
 
 }
