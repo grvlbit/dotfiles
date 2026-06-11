@@ -9,23 +9,23 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- Automatically set text width for markdown files
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "markdown" },
-  command = "set tw=80",
+-- Automatically set text width, format expression, and wrapping for markdown files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.textwidth  = 80
+    vim.opt_local.wrap       = true
+    vim.opt_local.formatexpr = ""
+  end,
 })
 
--- Empty formatexpr for markdown files to make gqq and gqap work again
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "markdown", "gitcommit" },
-  command = "set formatexpr=",
-})
-
--- Markdown should have wrapping enabled by default
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "markdown" },
-  command = "set wrap",
+-- Empty formatexpr for gitcommit so gqq/gqap work correctly
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "gitcommit",
+  callback = function()
+    vim.opt_local.formatexpr = ""
+  end,
 })
 
 -- INFO: This is the default nvim colorscheme
-vim.cmd.colorscheme 'habamax'
+-- vim.cmd.colorscheme 'habamax'

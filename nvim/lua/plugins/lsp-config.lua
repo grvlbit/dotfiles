@@ -1,8 +1,5 @@
 return {
-  {
-      "mason-org/mason.nvim",
-      opts = {}
-  },
+  { "mason-org/mason.nvim", opts = {} },
   {
     "mason-org/mason-lspconfig.nvim",
     opts = {},
@@ -11,12 +8,7 @@ return {
         "neovim/nvim-lspconfig",
     },
   },
-  {
-  "j-hui/fidget.nvim",
-  opts = {
-    -- options
-  },
-  },
+  { "j-hui/fidget.nvim", opts = {} },
   {
   'saghen/blink.cmp',
   -- optional: provides snippets for the snippet source
@@ -25,23 +17,9 @@ return {
   -- use a release tag to download pre-built binaries
   version = '1.*',
   opts = {
-    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-    -- 'super-tab' for mappings similar to vscode (tab to accept)
-    -- 'enter' for enter to accept
-    -- 'none' for no mappings
-    --
-    -- All presets have the following mappings:
-    -- C-space: Open menu or open docs if already open
-    -- C-n/C-p or Up/Down: Select next/previous item
-    -- C-e: Hide menu
-    -- C-k: Toggle signature help (if signature.enabled = true)
-    --
-    -- See :h blink-cmp-config-keymap for defining your own keymap
     keymap = { preset = 'default' },
 
     appearance = {
-      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- Adjusts spacing to ensure icons are aligned
       nerd_font_variant = 'mono'
     },
 
@@ -54,13 +32,43 @@ return {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
     },
 
-    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-    --
-    -- See the fuzzy documentation for more information
-    fuzzy = { implementation = "prefer_rust_with_warning" }
+    fuzzy = { implementation = "prefer_rust" }
   },
-  opts_extend = { "sources.default" }
+  opts_extend = { "sources.default" },
+  config = function(_, opts)
+    local blink = require('blink.cmp')
+    blink.setup(opts)
+
+    -- Advertise extended LSP capabilities (richer completion items, snippets, etc.)
+    vim.lsp.config('*', {
+      capabilities = blink.get_lsp_capabilities(),
+    })
+  end,
+  },
+
+  -- LSP keymaps — set buffer-locally whenever a server attaches
+  {
+    "neovim/nvim-lspconfig",
+    lazy = true,
+    init = function()
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('UserLspAttach', { clear = true }),
+        callback = function(event)
+          local map = function(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
+
+          map('gd',         vim.lsp.buf.definition,       'Go to [D]efinition')
+          map('gD',         vim.lsp.buf.declaration,      'Go to [D]eclaration')
+          map('gr',         vim.lsp.buf.references,       'Go to [R]eferences')
+          map('gi',         vim.lsp.buf.implementation,   'Go to [I]mplementation')
+          map('gy',         vim.lsp.buf.type_definition,  'Go to T[y]pe Definition')
+          map('K',          vim.lsp.buf.hover,            'Hover documentation')
+          map('<leader>rn', vim.lsp.buf.rename,           '[R]e[n]ame symbol')
+          map('<leader>ca', vim.lsp.buf.code_action,      '[C]ode [A]ction')
+          map('<leader>f',  function() vim.lsp.buf.format({ async = true }) end, '[F]ormat buffer')
+        end,
+      })
+    end,
   },
 }

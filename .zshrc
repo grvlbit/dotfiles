@@ -50,6 +50,13 @@ alias kubectl="minikube kubectl --"
 # set less slurm-<latest>.log
 alias lesss='less $(ls -1 slurm-*.out | sort -V | tail -n 1)'
 
+alias occ='docker run --rm -it \
+  -p 4096:4096 \
+  --env-file "$HOME/.opencode.env" \
+  -v "$HOME/.config/opencode/opencode.json:/home/coder/.config/opencode/opencode.json:ro" \
+  -v "$(pwd):/workspace:rw" \
+  opencodecontainer opencode --port 4096 --hostname 0.0.0.0'
+
 function command_exists {
   #this should be a very portable way of checking if something is on the path
   #usage: "if command_exists foo; then echo it exists; fi"

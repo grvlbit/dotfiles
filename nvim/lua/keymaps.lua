@@ -23,13 +23,18 @@ vim.opt.cursorlineopt="number"           -- Hightlights only line number not who
 vim.opt.relativenumber = true            -- Enable relative line numbers
 
 -- Searching
-vim.opt.ignorecase=true
-vim.opt.smartcase=true
-vim.opt.showmatch=true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.showmatch = true
 
--- Spell checking
-vim.opt.spelllang = { "en", "de" }
-vim.opt.spell = true
+-- Spell checking — deferred to file open to avoid loading dictionaries at startup
+vim.api.nvim_create_autocmd('BufReadPost', {
+  once = true,
+  callback = function()
+    vim.opt.spelllang = { "en", "de" }
+    vim.opt.spell = true
+  end,
+})
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -42,16 +47,11 @@ vim.o.breakindent = true
 -- Save undo history
 vim.o.undofile = true
 
--- Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeout = true
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
@@ -67,28 +67,29 @@ if conda_home ~= nil then
   vim.g.python3_host_prog= conda_home .. "/bin/python"
 end
 
--- Default custom filetypes
+-- Map common Ansible directory structures to yaml.ansible filetype.
+-- Using path patterns avoids misclassifying Kubernetes, GH Actions, docker-compose, etc.
 vim.filetype.add({
-  extension = {
-    yml = "yaml.ansible",
-    yaml = "yaml.ansible"
-  }
+  pattern = {
+    ['.*/roles/.+%.ya?ml']      = 'yaml.ansible',
+    ['.*/playbooks/.+%.ya?ml']  = 'yaml.ansible',
+    ['.*/tasks/.+%.ya?ml']      = 'yaml.ansible',
+    ['.*/handlers/.+%.ya?ml']   = 'yaml.ansible',
+    ['.*/defaults/.+%.ya?ml']   = 'yaml.ansible',
+    ['.*/vars/.+%.ya?ml']       = 'yaml.ansible',
+    ['.*/group_vars/.+%.ya?ml'] = 'yaml.ansible',
+    ['.*/host_vars/.+%.ya?ml']  = 'yaml.ansible',
+    ['.*playbook.*%.ya?ml']     = 'yaml.ansible',
+  },
 })
 
 -- [[ Basic Keymaps ]]
 
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+-- Remap the ESC key for quicker escaping
+vim.keymap.set('i', 'jj', '<ESC>')
 
 -- You can't stop me
 vim.keymap.set('c', 'w!!', 'w !sudo tee %')
-
--- Map paste mode toggle to something useful
-vim.keymap.set('n', '<leader>p', ':set paste!<CR>')
-
--- Remap the ESC key for quicker escaping
-vim.keymap.set('i', 'jj', '<ESC>')
 
 -- TAB in general mode will move to text buffer
 vim.keymap.set('n', '<TAB>', ':bnext<CR>')
@@ -99,12 +100,6 @@ vim.keymap.set('n', '<S-TAB>', ':bprevious<CR>')
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 vim.keymap.set('n', 'J', 'mzJ`z')
-
--- Better window navigation
-vim.keymap.set('n', '<C-h>', '<C-w>h')
-vim.keymap.set('n', '<C-j>', '<C-w>j')
-vim.keymap.set('n', '<C-k>', '<C-w>k')
-vim.keymap.set('n', '<C-l>', '<C-w>l')
 
 -- Use alt + hjkl to resize windows
 vim.keymap.set('n', '<M-j>', ':resize +2<CR>')
@@ -117,10 +112,10 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Open journal file in new buffer and set it to markdown
-local function get_journal_filename()
-  return 'journal-' .. os.date('%Y-%m-%d') .. '.md'
-end
-vim.keymap.set('n', '<leader>j', ":edit " .. "~/journal/" .. get_journal_filename() .. "<cr>", {})
+vim.keymap.set('n', '<leader>j', function()
+  local filename = 'journal-' .. os.date('%Y-%m-%d') .. '.md'
+  vim.cmd("edit ~/journal/" .. filename)
+end, { desc = "Open today's journal" })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', function()
@@ -132,7 +127,6 @@ vim.keymap.set('n', ']d', function()
 end, { desc = "Go to next diagnostic message" })
 
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
 -- Strip trailing whitespace
 vim.keymap.set("n", "<leader>w", ":%s/\\s\\+$//e<CR>", { silent = true })

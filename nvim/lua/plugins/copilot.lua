@@ -8,7 +8,12 @@ return {
         suggestion = {
           auto_trigger = true,
           keymap = {
-            accept = "<TAB>",
+            accept     = "<TAB>",
+            accept_word = "<M-w>",
+            accept_line = "<M-l>",
+            next       = "<M-]>",
+            prev       = "<M-[>",
+            dismiss    = "<C-e>",
           }
         },
         filetypes = {

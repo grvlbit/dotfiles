@@ -8,5 +8,17 @@ return {
         theme = 'auto', -- onedark
       },
     },
+    config = function(_, opts)
+      require("lualine").setup(vim.tbl_deep_extend("force", opts, {
+        sections = {
+          lualine_z = {
+            {
+              -- Shows the currently connected server and its status
+              require("opencode").statusline,
+            },
+          },
+        },
+      }))
+    end,
   },
 }
